@@ -1,0 +1,186 @@
+/* GitHub Admin Profile Guard Styles */
+
+.gh-admin-guard-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10000;
+  background: linear-gradient(135deg, #d73a49 0%, #cb2431 100%);
+  color: white;
+  padding: 12px 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.gh-admin-guard-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.gh-admin-guard-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.gh-admin-guard-message {
+  flex: 1;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.gh-admin-guard-message strong {
+  font-weight: 600;
+}
+
+.gh-admin-guard-dismiss {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 6px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+
+.gh-admin-guard-dismiss:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.gh-admin-guard-dismiss:active {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+/* Modal Notification Styles */
+.gh-admin-guard-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10001;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.gh-admin-guard-modal-content {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  width: 90%;
+  animation: scaleIn 0.3s ease-out;
+  overflow: hidden;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.gh-admin-guard-modal-header {
+  background: linear-gradient(135deg, #d73a49 0%, #cb2431 100%);
+  color: white;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.gh-admin-guard-icon-large {
+  font-size: 32px;
+}
+
+.gh-admin-guard-modal-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.gh-admin-guard-modal-body {
+  padding: 24px;
+  color: #24292e;
+  line-height: 1.6;
+}
+
+.gh-admin-guard-modal-body p {
+  margin: 0 0 12px 0;
+}
+
+.gh-admin-guard-modal-body p:last-child {
+  margin-bottom: 0;
+}
+
+.gh-admin-guard-modal-body strong {
+  color: #d73a49;
+  font-weight: 600;
+}
+
+.gh-admin-guard-modal-footer {
+  padding: 16px 24px;
+  background: #f6f8fa;
+  border-top: 1px solid #e1e4e8;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.gh-admin-guard-acknowledge {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.gh-admin-guard-acknowledge:hover {
+  background: #22863a;
+}
+
+.gh-admin-guard-acknowledge:active {
+  background: #1e7e34;
+}
+
+/* Adjust page content when banner is shown */
+body.gh-admin-guard-banner-active {
+  padding-top: 60px;
+}
+

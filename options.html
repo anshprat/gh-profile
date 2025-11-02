@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub Admin Profile Guard - Settings</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      background: #f6f8fa;
+      padding: 20px;
+      color: #24292e;
+      min-width: 500px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #28a745 0%, #22863a 100%);
+      color: white;
+      padding: 24px;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      opacity: 0.9;
+      font-size: 14px;
+    }
+
+    .content {
+      padding: 24px;
+    }
+
+    .section {
+      margin-bottom: 32px;
+    }
+
+    .section:last-child {
+      margin-bottom: 0;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #24292e;
+    }
+
+    .toggle-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+    }
+
+    .toggle-label {
+      font-size: 14px;
+      color: #586069;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      background: #d1d5da;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .toggle-switch.active {
+      background: #28a745;
+    }
+
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      background: white;
+      border-radius: 50%;
+      top: 3px;
+      left: 3px;
+      transition: transform 0.2s;
+    }
+
+    .toggle-switch.active::after {
+      transform: translateX(20px);
+    }
+
+    .admin-list-container {
+      border: 1px solid #e1e4e8;
+      border-radius: 6px;
+      padding: 16px;
+      background: #f6f8fa;
+    }
+
+    .add-username-container {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .username-input {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid #d1d5da;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .username-input:focus {
+      outline: none;
+      border-color: #0366d6;
+      box-shadow: 0 0 0 3px rgba(3, 102, 214, 0.1);
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: #28a745;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #22863a;
+    }
+
+    .btn-danger {
+      background: #d73a49;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #cb2431;
+    }
+
+    .username-list {
+      list-style: none;
+    }
+
+    .username-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      background: white;
+      border: 1px solid #e1e4e8;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+
+    .username-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .username-text {
+      font-size: 14px;
+      color: #24292e;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    }
+
+    .remove-btn {
+      background: transparent;
+      border: none;
+      color: #d73a49;
+      cursor: pointer;
+      font-size: 14px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+
+    .remove-btn:hover {
+      background: #fdf2f2;
+    }
+
+    .notification-style-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .radio-option {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      border: 2px solid #e1e4e8;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .radio-option:hover {
+      border-color: #0366d6;
+      background: #f6f8fa;
+    }
+
+    .radio-option.selected {
+      border-color: #0366d6;
+      background: #f1f8ff;
+    }
+
+    .radio-option input[type="radio"] {
+      margin-right: 12px;
+      cursor: pointer;
+    }
+
+    .radio-option label {
+      flex: 1;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .radio-option .description {
+      font-size: 12px;
+      color: #586069;
+      margin-top: 4px;
+    }
+
+    .status-message {
+      padding: 12px;
+      border-radius: 4px;
+      margin-bottom: 16px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .status-message.success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+      display: block;
+    }
+
+    .status-message.error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+      display: block;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 24px;
+      color: #586069;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>GitHub Admin Profile Guard</h1>
+      <p>Configure which profiles are considered admin and how you want to be notified</p>
+    </div>
+
+    <div class="content">
+      <div id="status-message" class="status-message"></div>
+
+      <!-- Enable/Disable Extension -->
+      <div class="section">
+        <div class="section-title">Extension Status</div>
+        <div class="toggle-container">
+          <span class="toggle-label">Enable extension</span>
+          <div class="toggle-switch" id="enable-toggle"></div>
+        </div>
+      </div>
+
+      <!-- Admin Usernames -->
+      <div class="section">
+        <div class="section-title">Admin Usernames</div>
+        <div class="admin-list-container">
+          <div class="add-username-container">
+            <input
+              type="text"
+              id="username-input"
+              class="username-input"
+              placeholder="Enter GitHub username (e.g., admin-username)"
+            />
+            <button class="btn btn-primary" id="add-username-btn">Add</button>
+          </div>
+          <ul class="username-list" id="username-list">
+            <li class="empty-state">No admin usernames added yet</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Notification Style -->
+      <div class="section">
+        <div class="section-title">Notification Style</div>
+        <div class="notification-style-container">
+          <div class="radio-option" data-value="banner">
+            <input type="radio" name="notification-style" id="style-banner" value="banner" checked>
+            <label for="style-banner">
+              <div>Banner</div>
+              <div class="description">Persistent red banner at the top of the page</div>
+            </label>
+          </div>
+          <div class="radio-option" data-value="modal">
+            <input type="radio" name="notification-style" id="style-modal" value="modal">
+            <label for="style-modal">
+              <div>Modal</div>
+              <div class="description">Popup overlay that must be acknowledged</div>
+            </label>
+          </div>
+          <div class="radio-option" data-value="browser">
+            <input type="radio" name="notification-style" id="style-browser" value="browser">
+            <label for="style-browser">
+              <div>Browser Notification</div>
+              <div class="description">System notification with badge indicator</div>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>
+
