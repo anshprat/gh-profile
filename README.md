@@ -99,6 +99,32 @@ The extension monitors the following GitHub pages:
 3. Navigate to a PR page while logged in with that username
 4. Verify the notification appears
 
+### Packaging for Chrome Web Store
+
+To create a zip file ready for Chrome Web Store submission, use one of the packaging scripts:
+
+**Using Node.js (recommended, cross-platform):**
+```bash
+npm run package
+# or
+node package.js
+```
+
+**Using Bash (Unix/macOS/Linux):**
+```bash
+./package.sh
+```
+
+The script will:
+- Read the extension name and version from `manifest.json`
+- Copy all necessary files (excluding development files)
+- Create a zip file named `{Extension-Name}-v{Version}.zip`
+
+The generated zip file can be uploaded directly to the Chrome Web Store Developer Dashboard:
+https://chrome.google.com/webstore/devconsole
+
+**Note:** Development files like `README.md`, `create-icons.html`, and `generate-icons.js` are automatically excluded from the package.
+
 ## License
 
 MIT License - feel free to use and modify as needed.

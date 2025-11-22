@@ -1,0 +1,17 @@
+{
+  "name": "github-admin-profile-guard",
+  "version": "1.0.0",
+  "description": "Chrome extension packaging scripts",
+  "scripts": {
+    "package": "node package.js",
+    "package:bash": "./package.sh"
+  },
+  "keywords": [
+    "chrome-extension",
+    "github",
+    "admin-guard"
+  ],
+  "author": "",
+  "license": "MIT"
+}
+

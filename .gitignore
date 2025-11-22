@@ -1,0 +1,17 @@
+# Package files
+*.zip
+
+# Temporary packaging directories
+package-temp-*/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
