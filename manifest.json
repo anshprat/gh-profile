@@ -5,8 +5,7 @@
   "description": "Alerts you when using an admin GitHub profile on PR pages",
   "permissions": [
     "storage",
-    "notifications",
-    "tabs"
+    "notifications"
   ],
   "host_permissions": [
     "https://github.com/*",
@@ -17,9 +16,15 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://github.com/*"],
-      "js": ["content.js"],
-      "css": ["styles.css"],
+      "matches": [
+        "https://github.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "styles.css"
+      ],
       "run_at": "document_idle"
     }
   ],
@@ -38,4 +43,3 @@
     "128": "icons/icon128.png"
   }
 }
-

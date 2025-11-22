@@ -25,7 +25,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     chrome.action.setBadgeBackgroundColor({
       color: '#d73a49'
     });
-    
+
     // Send browser notification if enabled
     chrome.storage.sync.get(['notificationStyle', 'enabled'], (result) => {
       if (result.enabled && result.notificationStyle === 'browser') {
@@ -45,10 +45,5 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 });
 
-// Clear badge when tab is updated
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.status === 'complete' && tab.url && tab.url.includes('github.com')) {
-    // Badge will be updated by content script if admin is detected
-  }
-});
+
 
