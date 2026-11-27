@@ -1,55 +1,93 @@
 #!/bin/bash
 
-# Chrome Extension Packaging Script
-# This script creates a zip file ready for Chrome Web Store submission
+# Packaging script for the Chrome Web Store and Firefox Add-ons (AMO).
+#
+#   ./package.sh            # build both zips
+#   ./package.sh chrome     # Chrome zip only
+#   ./package.sh firefox    # Firefox zip only
+#
+# Chrome loads the repo root as is. Firefox needs a different manifest, so the
+# Firefox build copies the extension files to build/firefox/ and writes a
+# manifest made from manifest.json plus firefox/manifest.overrides.json.
+# Load build/firefox/ in about:debugging to test the Firefox build unpacked.
 
 set -e
 
-# Colors for output
+cd "$(dirname "$0")"
+
+TARGET="${1:-all}"
+
+# Files that make up the extension, the same for both browsers
+FILES=(background.js content.js options.html options.js styles.css icons)
+# Paths inside FILES to leave out of both packages
+EXCLUDES=()
+# Command that makes FILES first (empty when there is no build step)
+BUILD=""
+
+VERSION=$(jq -r '.version' manifest.json)
+NAME=$(jq -r '.name' manifest.json | tr ' ' '-' | tr '[:upper:]' '[:lower:]')
+
 GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+BLUE='\033[0;34m'
+NC='\033[0m'
 
-# Get the extension name and version from manifest.json
-EXTENSION_NAME=$(grep -o '"name": "[^"]*"' manifest.json | cut -d'"' -f4 | tr ' ' '-')
-VERSION=$(grep -o '"version": "[^"]*"' manifest.json | cut -d'"' -f4)
-PACKAGE_NAME="${EXTENSION_NAME}-v${VERSION}.zip"
+run_build() {
+    if [ -n "$BUILD" ]; then
+        echo -e "${BLUE}Building ${NAME} v${VERSION}...${NC}"
+        eval "$BUILD"
+    fi
+}
 
-echo -e "${GREEN}📦 Packaging Chrome Extension${NC}"
-echo "Extension: $EXTENSION_NAME"
-echo "Version: $VERSION"
-echo ""
+package_chrome() {
+    local zip_name="${NAME}-chrome-v${VERSION}.zip"
+    local excludes=("*.DS_Store")
+    local e
+    for e in "${EXCLUDES[@]}"; do excludes+=("$e" "$e/*"); done
+    echo -e "${BLUE}Packaging ${NAME} v${VERSION} for Chrome...${NC}"
+    rm -f "$zip_name"
+    zip -r "$zip_name" manifest.json "${FILES[@]}" -x "${excludes[@]}"
+    echo -e "${GREEN}Package created: ${zip_name}${NC}"
+    echo -e "${BLUE}Upload at: https://chrome.google.com/webstore/devconsole${NC}"
+}
 
-# Create a temporary directory for packaging
-TEMP_DIR=$(mktemp -d)
-PACKAGE_DIR="$TEMP_DIR/package"
+build_firefox() {
+    local out="build/firefox"
+    local f e
+    rm -rf "$out"
+    mkdir -p "$out"
+    for f in "${FILES[@]}"; do
+        mkdir -p "$out/$(dirname "$f")"
+        cp -R "$f" "$out/$(dirname "$f")/"
+    done
+    for e in "${EXCLUDES[@]}"; do rm -rf "${out:?}/$e"; done
+    # Firefox MV3 differences from Chrome:
+    # - No background service worker: run the same script as a background event page.
+    # - No options_page: use options_ui, opened in a tab as Chrome does.
+    jq -s '.[0] * .[1]
+        | if .background.service_worker then
+            .background = (.background | .scripts = [.service_worker] | del(.service_worker))
+          else . end
+        | if .options_page then
+            .options_ui = {page: .options_page, open_in_tab: true} | del(.options_page)
+          else . end' \
+        manifest.json firefox/manifest.overrides.json > "$out/manifest.json"
+    find "$out" -name ".DS_Store" -delete
+}
 
-mkdir -p "$PACKAGE_DIR"
+package_firefox() {
+    local zip_name="${NAME}-firefox-v${VERSION}.zip"
+    echo -e "${BLUE}Packaging ${NAME} v${VERSION} for Firefox...${NC}"
+    build_firefox
+    rm -f "$zip_name"
+    # The manifest must be at the zip root, so zip from inside the build folder
+    (cd build/firefox && zip -r "../../$zip_name" .)
+    echo -e "${GREEN}Package created: ${zip_name}${NC}"
+    echo -e "${BLUE}Upload at: https://addons.mozilla.org/developers/addon/submit/${NC}"
+}
 
-echo -e "${YELLOW}Copying files...${NC}"
-
-# Copy essential files
-cp manifest.json "$PACKAGE_DIR/"
-cp background.js "$PACKAGE_DIR/"
-cp content.js "$PACKAGE_DIR/"
-cp options.html "$PACKAGE_DIR/"
-cp options.js "$PACKAGE_DIR/"
-cp styles.css "$PACKAGE_DIR/"
-
-# Copy icons directory
-cp -r icons "$PACKAGE_DIR/"
-
-# Create zip file
-echo -e "${YELLOW}Creating zip file...${NC}"
-cd "$PACKAGE_DIR"
-zip -r "$OLDPWD/$PACKAGE_NAME" . -x "*.DS_Store" "*.git*" > /dev/null
-cd "$OLDPWD"
-
-# Clean up
-rm -rf "$TEMP_DIR"
-
-echo -e "${GREEN}✅ Package created: $PACKAGE_NAME${NC}"
-echo ""
-echo "You can now upload this file to the Chrome Web Store:"
-echo "  https://chrome.google.com/webstore/devconsole"
-
+case "$TARGET" in
+    chrome)  run_build; package_chrome ;;
+    firefox) run_build; package_firefox ;;
+    all)     run_build; package_chrome; package_firefox ;;
+    *)       echo "Usage: $0 [chrome|firefox|all]" >&2; exit 1 ;;
+esac

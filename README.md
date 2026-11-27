@@ -1,6 +1,6 @@
 # GitHub Admin Profile Guard
 
-A Chrome extension that alerts you when you're using an admin GitHub profile on PR pages, helping prevent accidental use of admin accounts for non-admin tasks.
+A Chrome and Firefox extension that alerts you when you're using an admin GitHub profile on PR pages, helping prevent accidental use of admin accounts for non-admin tasks.
 
 ## Features
 
@@ -32,6 +32,24 @@ A Chrome extension that alerts you when you're using an admin GitHub profile on 
    - Enable "Developer mode" (toggle in top right)
    - Click "Load unpacked"
    - Select the `gh-profile` directory
+
+## Firefox
+
+Firefox 140 or later is necessary. Firefox uses the same code as Chrome, with a different manifest. Load the Firefox build, not the repository root.
+
+1. Run `./package.sh firefox`. This writes the Firefox build to `build/firefox/`. The script needs `jq` and `zip`.
+2. Open `about:debugging#/runtime/this-firefox`.
+3. Click **Load Temporary Add-on** and select `build/firefox/manifest.json`.
+
+Firefox removes a temporary add-on when it closes. To keep the add-on installed, sign it on addons.mozilla.org (AMO) as unlisted:
+
+```bash
+npx web-ext sign --channel=unlisted --source-dir build/firefox --artifacts-dir build/signed
+```
+
+The command reads your AMO API keys from the `WEB_EXT_API_KEY` and `WEB_EXT_API_SECRET` environment variables. Create the keys at https://addons.mozilla.org/en-US/developers/addon/api/key/.
+
+`./package.sh` with no argument makes `github-admin-profile-guard-chrome-vX.Y.Z.zip` and `github-admin-profile-guard-firefox-vX.Y.Z.zip`. The Firefox manifest is `manifest.json` merged with `firefox/manifest.overrides.json`.
 
 ## Configuration
 
@@ -114,6 +132,8 @@ node package.js
 ```bash
 ./package.sh
 ```
+
+`./package.sh` makes a Chrome zip and a Firefox zip. See [Firefox](#firefox).
 
 The script will:
 - Read the extension name and version from `manifest.json`

@@ -4,7 +4,7 @@
 
 ## Overview
 
-GitHub Admin Profile Guard is a Chrome extension that alerts you when you're using an admin GitHub profile on PR pages, helping prevent accidental use of admin accounts for non-admin tasks. This privacy policy explains our data practices and commitment to user privacy.
+GitHub Admin Profile Guard is a Chrome and Firefox extension that alerts you when you're using an admin GitHub profile on PR pages, helping prevent accidental use of admin accounts for non-admin tasks. This privacy policy explains our data practices and commitment to user privacy.
 
 **Note:** GitHub is a trademark of GitHub, Inc. This extension is not affiliated with or endorsed by GitHub.
 
@@ -98,6 +98,7 @@ https://github.com/anshprat/gh-profile
 
 This extension complies with:
 - Chrome Web Store Developer Program Policies
+- Firefox Add-on Policies
 - General Data Protection Regulation (GDPR)
 - California Consumer Privacy Act (CCPA)
 - Other applicable privacy regulations
